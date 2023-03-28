@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import com.example.dto.Role;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,6 +33,7 @@ public class People implements UserDetails {
     private Integer studentCardCode;
     private Integer teacherCardCode;
     private String major;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Override

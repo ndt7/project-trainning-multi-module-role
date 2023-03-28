@@ -5,24 +5,27 @@ import com.example.dto.AuthenticationRequest;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/home")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class HomeController {
 
     private final AuthenticationService service;
 
-    @RequestMapping("/register")
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
-        return null;
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok(service.register(registerRequest));
     }
 
-    @RequestMapping("/login")
-    public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
-        return null;
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
+        return ResponseEntity.ok(service.authenticate(authenticationRequest));
     }
 
 }

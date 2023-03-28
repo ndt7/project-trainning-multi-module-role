@@ -1,12 +1,11 @@
 package com.example.entity;
 
 import com.example.dto.TokenType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Builder
 @Data

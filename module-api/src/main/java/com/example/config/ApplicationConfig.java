@@ -24,7 +24,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) repository.findByEmail(username)    /// tìm kiếm username trong csdl
+        return username -> repository.findByEmail(username)    /// tìm kiếm username trong csdl
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
