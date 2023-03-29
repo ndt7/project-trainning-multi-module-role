@@ -30,6 +30,31 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.TEACHER)
+                .build();
+        Optional<People> userExit = repository.findByEmail(request.getEmail());   /// tìm kiếm trong csdl
+        if (userExit.isPresent()) {    /// nếu tồn tại rồi
+            var jwtToken = jwtService.generateToken(people);   //// thì generate token theo user da tim thay
+            saveUserToken(userExit.get(), jwtToken);
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .build();
+        }
+
+        var savedUser = repository.save(people);   /// luu vao csdl
+        var jwtToken = jwtService.generateToken(people);   //// generate token
+        saveUserToken(savedUser, jwtToken);   /// luu token
+        return AuthenticationResponse.builder()     ///tra ve cho nguoi dung
+                .token(jwtToken)
+                .build();
+    }
+
+    public AuthenticationResponse registerStudent(RegisterRequest request) {
+        var people = People.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.STUDENT)
                 .build();
         Optional<People> userExit = repository.findByEmail(request.getEmail());   /// tìm kiếm trong csdl
@@ -40,6 +65,7 @@ public class AuthenticationService {
                     .token(jwtToken)
                     .build();
         }
+
         var savedUser = repository.save(people);   /// luu vao csdl
         var jwtToken = jwtService.generateToken(people);   //// generate token
         saveUserToken(savedUser, jwtToken);   /// luu token
@@ -63,6 +89,7 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+
 
     /// luu token vao csdl
     private void saveUserToken(People user, String jwtToken) {

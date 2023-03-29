@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -27,14 +28,17 @@ public class People implements UserDetails {
     private String lastname;
     private String email;
     private String password;
-    private Integer phoneNumber;
+    @ManyToMany
+    Set<Subject> subjectSet;
     private String introduce;
     private String address;
     private Integer studentCardCode;
     private Integer teacherCardCode;
     private String major;
+    private Integer age;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String phoneNumber;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

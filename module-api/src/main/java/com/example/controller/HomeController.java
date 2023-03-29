@@ -23,7 +23,7 @@ public class HomeController {
         return ResponseEntity.ok(service.register(registerRequest));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/authorization")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(service.authenticate(authenticationRequest));
     }

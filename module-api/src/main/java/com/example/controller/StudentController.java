@@ -1,31 +1,41 @@
 package com.example.controller;
 
+import com.example.auth.AuthenticationService;
+import com.example.dto.AuthenticationResponse;
+import com.example.dto.CommonResponse;
+import com.example.dto.RegisterRequest;
+import com.example.entity.People;
+import com.example.service.StudentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/home")
+//@Lazy
+@RequestMapping("/api/student")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@EnableMethodSecurity
+//@EnableMethodSecurity
+@RequiredArgsConstructor
 public class StudentController {
-    @RequestMapping("/student")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
-//    @Secured({ "ADMIN", "STUDENT" })
-    public ResponseEntity<String> home(){
-        return ResponseEntity.ok("student role");
+    private final StudentService studentService;
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'ADMIN')")
+    @PostMapping("/add")
+    public People addStudent(@RequestBody RegisterRequest request) {
+        return studentService.addStudent(request);
+    }
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'ADMIN')")
+    @PostMapping("/edit")
+    public ResponseEntity<People> editStudent(@RequestBody People people) {
+        return studentService.editStudent(people);
     }
 
-    @RequestMapping("/teacher")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TEACHER')")
-//    @Secured({"ADMIN", "TEACHER"})
-    public ResponseEntity<String> teacher(){
-
-        return ResponseEntity.ok("teacher role");
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @GetMapping("/jobcommon")
+    public CommonResponse jobCommon() {
+        return studentService.jobCommon();
     }
+
 }
