@@ -1,15 +1,17 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/db_training
+    url: jdbc:mysql://127.0.0.1:3306/db_training_jwt22
     username: root
     password: string
 
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+#  jpa:
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#  profiles:
+#    active:
 
 server:
   port: 8082
