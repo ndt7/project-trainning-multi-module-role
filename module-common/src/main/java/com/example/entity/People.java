@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "peoples")
 public class People implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +30,8 @@ public class People implements UserDetails {
     private String lastname;
     private String email;
     private String password;
-    @ManyToMany
-    Set<Subject> subjectSet;
+    @ManyToMany(mappedBy = "peoples")
+    Set<Subject> subjects = new HashSet<>();
     private String introduce;
     private String address;
     private Integer studentCardCode;

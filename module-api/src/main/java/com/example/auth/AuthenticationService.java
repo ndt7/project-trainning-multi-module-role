@@ -25,6 +25,7 @@ public class AuthenticationService {
 
     /// ĐĂNG KÝ NGƯỜI DÙNG MỚI
     public AuthenticationResponse register(RegisterRequest request) {
+
         var people = People.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -39,14 +40,15 @@ public class AuthenticationService {
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();
+        } else {
+            var savedUser = repository.save(people);   /// luu vao csdl
+            var jwtToken = jwtService.generateToken(people);   //// generate token
+            saveUserToken(savedUser, jwtToken);   /// luu token
+            return AuthenticationResponse.builder()     ///tra ve cho nguoi dung
+                    .token(jwtToken)
+                    .build();
         }
 
-        var savedUser = repository.save(people);   /// luu vao csdl
-        var jwtToken = jwtService.generateToken(people);   //// generate token
-        saveUserToken(savedUser, jwtToken);   /// luu token
-        return AuthenticationResponse.builder()     ///tra ve cho nguoi dung
-                .token(jwtToken)
-                .build();
     }
 
     public AuthenticationResponse registerStudent(RegisterRequest request) {
@@ -76,18 +78,25 @@ public class AuthenticationService {
 
     /// authentication tra ve token, xac thuc tai khoan
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
-                request.getPassword()));
-        var user = repository.findByEmail(request.getEmail())   /// tim kiem trong csdl
-                .orElseThrow();
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()));
+            var user = repository.findByEmail(request.getEmail());   /// tim kiem trong csdl;
+            if (user.isPresent()) {
+                var jwtToken = jwtService.generateToken(user.get());   /// generate token từ user
+                revokeAllUserTokens(user.get());
+                saveUserToken(user.get(), jwtToken);
+                return AuthenticationResponse.builder()
+                        .token(jwtToken)
+                        .build();
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
-        var jwtToken = jwtService.generateToken(user);   /// generate token từ user
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
     }
 
 
