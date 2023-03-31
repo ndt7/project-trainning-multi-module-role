@@ -38,8 +38,10 @@ public class People implements UserDetails {
     private Integer teacherCardCode;
     private String major;
     private Integer age;
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.STUDENT;
+
     private String phoneNumber;
 
     @Override

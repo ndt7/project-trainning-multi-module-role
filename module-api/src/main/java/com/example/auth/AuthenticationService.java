@@ -5,11 +5,13 @@ import com.example.entity.People;
 import com.example.entity.Token;
 import com.example.repository.PeopleRepository;
 import com.example.repository.TokenRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -23,60 +25,49 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    /// ĐĂNG KÝ NGƯỜI DÙNG MỚI
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(@RequestBody @Valid RegisterRequest request) {
 
         var people = People.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
-                .email(request.getEmail())
+                .email(request.getEmail().toString())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.TEACHER)
                 .build();
-        Optional<People> userExit = repository.findByEmail(request.getEmail());   /// tìm kiếm trong csdl
-        if (userExit.isPresent()) {    /// nếu tồn tại rồi
-            var jwtToken = jwtService.generateToken(people);   //// thì generate token theo user da tim thay
-            saveUserToken(userExit.get(), jwtToken);
+        Optional<People> userExit = repository.findByEmail(request.getEmail().toString());   /// tìm kiếm trong csdl
+        if (userExit.isEmpty()) {
+            var savedUser = repository.save(people);
+            var jwtToken = jwtService.generateToken(people);
+            saveUserToken(savedUser, jwtToken);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
                     .build();
         } else {
-            var savedUser = repository.save(people);   /// luu vao csdl
-            var jwtToken = jwtService.generateToken(people);   //// generate token
-            saveUserToken(savedUser, jwtToken);   /// luu token
-            return AuthenticationResponse.builder()     ///tra ve cho nguoi dung
-                    .token(jwtToken)
-                    .build();
+            return null;
         }
 
     }
 
-    public AuthenticationResponse registerStudent(RegisterRequest request) {
+    public AuthenticationResponse registerAdmin(@RequestBody @Valid RegisterRequest request) {
         var people = People.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
-                .email(request.getEmail())
+                .email(request.getEmail().toString())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.STUDENT)
+                .role(Role.ADMIN)
                 .build();
-        Optional<People> userExit = repository.findByEmail(request.getEmail());   /// tìm kiếm trong csdl
-        if (userExit.isPresent()) {    /// nếu tồn tại rồi
-            var jwtToken = jwtService.generateToken(people);   //// thì generate token theo user da tim thay
-            saveUserToken(userExit.get(), jwtToken);
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
+        Optional<People> userExit = repository.findByEmail(request.getEmail().toString());
+        if (userExit.isPresent()) {
+            return null;
         }
-
-        var savedUser = repository.save(people);   /// luu vao csdl
-        var jwtToken = jwtService.generateToken(people);   //// generate token
-        saveUserToken(savedUser, jwtToken);   /// luu token
-        return AuthenticationResponse.builder()     ///tra ve cho nguoi dung
+        var savedUser = repository.save(people);
+        var jwtToken = jwtService.generateToken(people);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    /// authentication tra ve token, xac thuc tai khoan
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -93,14 +84,10 @@ public class AuthenticationService {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
-
     }
 
-
-    /// luu token vao csdl
     private void saveUserToken(People user, String jwtToken) {
         var token = Token.builder()
                 .people(user)
@@ -112,14 +99,13 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    /// thu hồi tất cả token người dùng trước đây
     private void revokeAllUserTokens(People user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());    // tìm kiến tokens theo ID user
-        if (validUserTokens.isEmpty())   /// kiểm tra xem có null không
+        if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {
-            token.setExpired(true);    /// gán cho token đã hết hạn
-            token.setRevoked(true);    //// gán cho token đã thu hồi
+            token.setExpired(true);
+            token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
     }

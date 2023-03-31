@@ -1,15 +1,23 @@
 spring:
-#  datasource:
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/db_training_jwt2
-#    username: root
-#    password: string
+  #  datasource:
+  #    driverClassName: com.mysql.cj.jdbc.Driver
+  #    url: jdbc:mysql://127.0.0.1:3306/db_training_jwt2
+  #    username: root
+  #    password: string
   jpa:
     generate-ddl: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+  #    show-sql: true
   profiles:
     active: local
-#server:
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher
+
+
+
+#  mvc:
+#    path match:
+#      matching-strategy=ant_path_matcher
 #  port: 8082

@@ -1,6 +1,5 @@
 package com.example.auth;
 
-
 import com.example.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,14 +20,13 @@ import java.io.IOException;
 
 
 @Component
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)   /// không cần phải Autoriwe, sinh ra constructor
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
 
-    /// middle ware (chương trình trung gian để check authentication, authorization)
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -63,4 +61,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
 }

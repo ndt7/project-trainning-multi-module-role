@@ -8,5 +8,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/teacher")
 @EnableGlobalAuthentication
 public class TeacherController {
-
 }

@@ -10,14 +10,13 @@ public class GetEmailIntroduceService {
     public String get(String text) {
         try {
             String regex = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b";
-
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(text);
-            while (matcher.find()){
+            while (matcher.find()) {
                 return matcher.group();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("no email in the introduce");
             return null;
         }

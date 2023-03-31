@@ -1,5 +1,7 @@
 package com.example.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    private String email;
+
+    @NotNull(message = "Password can't empty.")
     String password;
+    @NotNull(message = "Email can't empty.")
+    @Email(message = "Incorrect email format")
+    private String email;
 }

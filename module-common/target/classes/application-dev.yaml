@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/db_training_jwt22
+    url: jdbc:mysql://127.0.0.1:3306/db_training_jwt2
     username: root
     password: string
 
@@ -15,3 +15,4 @@ spring:
 
 server:
   port: 8082
+  phoneNumberEncryption: dev

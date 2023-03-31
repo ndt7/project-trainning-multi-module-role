@@ -15,4 +15,5 @@ public interface PeopleRepository extends JpaRepository<People, Integer> {
 
     Optional<Integer> countByRole(Role role);
 
+
 }

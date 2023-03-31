@@ -26,15 +26,13 @@ public class CommonService {
 
         List<Subject> subjectList = subjectRepo.findAll();
         List<People> peopleList = peopleRepo.findAll();
-        Map<Subject, List<People>> subjectPeopleMap = subjectList.stream()
+
+        return subjectList.stream()
                 .collect(Collectors.toMap(
                         subject -> subject,
                         subject -> peopleList.stream()
                                 .filter(people -> people.getSubjects().contains(subject))
                                 .collect(Collectors.toList())
                 ));
-        return subjectPeopleMap;
     }
-
-
 }

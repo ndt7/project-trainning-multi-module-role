@@ -28,7 +28,9 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**")
+                .requestMatchers("/v3/api-docs/**")
+                .permitAll()
+                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/swagger-ui.html", "*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -41,8 +43,8 @@ public class SecurityConfiguration {
                 .logout()
                 .logoutUrl("/api/v1/auth/logout")
                 .addLogoutHandler(logoutHandler)
-                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
+                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext());
         return http.build();
     }
+
 }
