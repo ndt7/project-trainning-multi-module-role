@@ -25,7 +25,8 @@ public class AuthController {
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ApiResponseDto register(@RequestBody @Valid RegisterRequest registerRequest, BindingResult bindingResult) {
+    public ApiResponseDto register(@RequestBody @Valid RegisterRequest registerRequest,
+                                   BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();

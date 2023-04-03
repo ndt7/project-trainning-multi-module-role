@@ -63,14 +63,14 @@ public class StudentService {
     public CommonResponse jobCommon() {
         Optional<Integer> countStudent = peopleRepo.countByRole(Role.STUDENT);
         Optional<Integer> countTeacher = peopleRepo.countByRole(Role.TEACHER);
-        Map<Subject, List<People>> subjectPeopleMap = commonService.findCountPeopleSameSubject();
+//        Map<Subject, List<People>> subjectPeopleMap = commonService.findCountPeopleSameSubject();
         Map<Integer, Long> sameAge = commonService.findPeopleSameAge(peopleRepo.findAll());
 
         return CommonResponse.builder()
                 .countStudent(countStudent.get())
                 .countTeacher(countTeacher.get())
                 .countSameAge(sameAge)
-                .countSameSubject(subjectPeopleMap)
+                .countSameSubject(null)
                 .build();
     }
 

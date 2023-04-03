@@ -56,7 +56,7 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ADMIN)
                 .build();
-        Optional<People> userExit = repository.findByEmail(request.getEmail().toString());
+        Optional<People> userExit = repository.findByEmail(request.getEmail());
         if (userExit.isPresent()) {
             return null;
         }

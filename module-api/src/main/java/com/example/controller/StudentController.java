@@ -62,7 +62,7 @@ public class StudentController {
                 if (p != null) {
                     return ApiResponseDto.actionSuccess(p, GlobalVariable.ACTION_SUCCESS);
                 } else {
-                    return ApiResponseDto.actionFail(String.format("User %s does not exit.", p.getEmail()));
+                    return ApiResponseDto.actionFail(GlobalVariable.ACTION_FAILED);
                 }
             }
         } catch (Exception e) {

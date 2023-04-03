@@ -5,6 +5,7 @@ import com.example.entity.Subject;
 import com.example.repository.PeopleRepository;
 import com.example.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,10 @@ public class CommonService {
         return peopleList.stream().collect(Collectors.groupingBy(People::getAge, Collectors.counting()));
     }
 
+    public Map<Integer, Long> findPeopleSameAge2(List<People> peopleList){
+        return peopleList.stream().collect(Collectors.toMap(People::getAge, Collectors.counting());
+    }
+    @Scheduled(fixedDelay = 4324)
     public Map<Subject, List<People>> findCountPeopleSameSubject() {
 
         List<Subject> subjectList = subjectRepo.findAll();
